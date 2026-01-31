@@ -1,5 +1,6 @@
+import 'package:firebase_series/constants/style.dart';
 import 'package:firebase_series/controller/auth_controller.dart';
-import 'package:firebase_series/screens/home_page.dart';
+import 'package:firebase_series/screens/widgets/textfields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,188 +9,101 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailCtrl = TextEditingController();
-    TextEditingController passwordCtrl = TextEditingController();
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
     final AuthController controller = Get.find();
     return Scaffold(
-      backgroundColor: Colors.blue,
-      body: Padding(
-        padding: EdgeInsets.all(15),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              width: double.infinity,
-              height: 540,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(top: 100.0, left: 20.0, right: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Image.asset('assets/carrot.png', width: 70, height: 70),
               ),
-              child: Padding(
-                padding: EdgeInsets.only(top: 20.0, left: 10, right: 10),
-                child: Column(
-                  children: [
-                    Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+              SizedBox(height: 80),
+              Text(
+                'Loging',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 5),
+              Text('Enter your emails and password'),
+              SizedBox(height: 25),
+              Text('Email'),
+              Textfields(
+                hintText: 'johndoe@gmail.com',
+                enabledBorderColor: Colors.grey,
+                focusedBorderColor: Colors.grey,
+                ctrl: emailController,
+              ),
+              SizedBox(height: 30),
+              Text('Password'),
+              Obx(() {
+                return TextField(
+                  obscureText: controller.obscurePassword.value,
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.obscurePassword.value
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
+                      onPressed: () {
+                        controller.obscurePassword.toggle();
+                      },
                     ),
-                    SizedBox(height: 15),
-                    inputFeilds(hintText: "Email", controller: emailCtrl),
-                    SizedBox(height: 15),
-                    inputFeilds(
-                      hintText: " Password",
-                      controller: passwordCtrl,
-                    ),
-                    SizedBox(height: 20),
+                  ),
+                );
+              }),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [Text('Forgot Password?')],
+              ),
+              SizedBox(height: 30),
 
-                    Obx(() {
-                      return controller.isLoading.value
-                          ? const CircularProgressIndicator()
-                          : SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  await controller.login(
-                                    emailCtrl.text,
-                                    passwordCtrl.text,
-                                  );
-                                  if (controller.isLoading.value == false) {
-                                    Get.to(() => HomePage());
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color.fromARGB(
-                                    255,
-                                    32,
-                                    92,
-                                    222,
-                                  ),
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                                child: Text('Login'),
-                              ),
+              Obx(() {
+                return SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : () async {
+                            if (emailController.text.isEmpty ||
+                                passwordController.text.isEmpty) {
+                              Get.snackbar('Error', 'All Feilds Required');
+                              return;
+                            }
+                            await controller.login(
+                              emailController.text,
+                              passwordController.text,
                             );
-                    }),
-
-                    SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Don\'t have an Account? '),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
                           },
-                          child: Text(
-                            'signup ',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 32, 92, 222),
-                              decoration: TextDecoration.underline,
-                              decorationColor: Color.fromARGB(255, 32, 92, 222),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(color: Colors.grey, thickness: 1),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Text('OR'),
-                        ),
-                        Expanded(
-                          child: Divider(color: Colors.grey, thickness: 1),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 10,
-                          ),
-                          backgroundColor: Color.fromARGB(255, 16, 51, 126),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Icon(Icons.facebook, size: 25),
-                            ),
-                            Center(child: Text('Login with Facebook')),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            'assets/google.png',
-                            height: 24,
-                            width: 24,
-                          ),
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                "Sign in with Google",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                    style: AppStyles.buttonStyle,
+                    child: controller.isLoading.value
+                        ? CircularProgressIndicator()
+                        : Text('LogIn', style: TextStyle(fontSize: 18)),
+                  ),
+                );
+              }),
+
+              SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Don\'t have an account?'),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text('Singup', style: TextStyle(color: Colors.grey)),
+                  ),
+                ],
               ),
-            ),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  TextField inputFeilds({
-    required String hintText,
-    required TextEditingController controller,
-  }) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        border: OutlineInputBorder(),
       ),
     );
   }
