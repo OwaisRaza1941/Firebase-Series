@@ -11,8 +11,8 @@ class FirebaseAuthServices {
         password: password,
       );
       return cred.user;
-    } catch (e) {
-      throw e.toString();
+    } on FirebaseAuthException catch (e) {
+      throw e;
     }
   }
 
@@ -24,8 +24,8 @@ class FirebaseAuthServices {
         password: password,
       );
       return cred.user;
-    } catch (e) {
-      throw e.toString();
+    } on FirebaseAuthException catch (e) {
+      throw e;
     }
   }
 

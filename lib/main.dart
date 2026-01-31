@@ -11,9 +11,7 @@ void main() async {
     options:
         DefaultFirebaseOptions.currentPlatform, // 👈 Platform specific config
   );
-
   Get.put(AuthController(), permanent: true);
-
   runApp(const MyApp());
 }
 

@@ -43,7 +43,7 @@ class SingupPage extends StatelessWidget {
               Textfields(
                 hintText: 'johndoe@gmail.com',
                 enabledBorderColor: Colors.grey,
-                focusedBorderColor: Colors.grey,
+                focusedBorderColor: Colors.green,
                 ctrl: emailController,
               ),
               SizedBox(height: 30),
